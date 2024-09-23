@@ -79,6 +79,17 @@ public class RedeSocial {
         }
     }
 
+    // Metodo para encontrar usuários com interesse em comum
+    public List<String> encontrarUsuariosComInteresses(String interesse) {
+        List<String> usuariosComInteresse = new ArrayList<>();
+        for (Usuario usuario : usuarios.values()) {
+            if (usuario.getInteresses().contains(interesse)) {
+                usuariosComInteresse.add(usuario.nome);
+            }
+        }
+        return usuariosComInteresse;
+    }
+
     // Encontrar o grau de separação entre dois usuários
     public int grauDeSeparacao(String nome1, String nome2) {
         Usuario u1 = usuarios.get(nome1);
