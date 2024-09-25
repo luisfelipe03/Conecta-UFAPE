@@ -1,0 +1,53 @@
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+public class PersistenciaJSON {
+
+    private static final String CAMINHO_JSON = "src/main/resources/data.json";
+    private static ObjectMapper objectMapper = new ObjectMapper();
+
+    // Salvar dados no arquivo JSON
+    public static void salvarDados(Map<String, Usuario> usuarios) {
+        try {
+            // Escreve os dados no arquivo JSON
+            objectMapper.writeValue(new File(CAMINHO_JSON), usuarios);
+            System.out.println("Dados salvos com sucesso.");
+        } catch (IOException e) {
+            System.out.println("Erro ao salvar dados no JSON: " + e.getMessage());
+        }
+    }
+
+    // Carregar dados do arquivo JSON
+    public static Map<String, Usuario> carregarDados() {
+        try {
+            File arquivo = new File(CAMINHO_JSON);
+
+            // Verifica se o arquivo existe
+            if (!arquivo.exists()) {
+                System.out.println("Arquivo data.json não encontrado, criando um novo.");
+                arquivo.createNewFile();
+                // Inicializa o arquivo com um objeto vazio
+                salvarDados(new HashMap<>());
+                return new HashMap<>();
+            }
+
+            // Verifica se o arquivo está vazio
+            if (arquivo.length() == 0) {
+                System.out.println("Arquivo data.json vazio, inicializando.");
+                return new HashMap<>();
+            }
+
+            // Ler o arquivo JSON e converter para um Map de usuários
+            return objectMapper.readValue(arquivo, new TypeReference<Map<String, Usuario>>() {});
+
+        } catch (IOException e) {
+            System.out.println("Erro ao carregar dados do JSON: " + e.getMessage());
+            return new HashMap<>();
+        }
+    }
+}
