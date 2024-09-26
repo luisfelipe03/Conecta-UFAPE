@@ -1,1 +1,1 @@
-{"email":{"nome":"Luis Felipe","email":"email","senha":"1234","interesses":["Java"],"amigos":[]}}
+{"luis@email.com":{"nome":"Luis Felipe de Oliveira Andrade","email":"luis@email.com","senha":"1234","curso":"Ciencia da computacao","interesses":["Java"],"amigos":[{"nome":"José Belmiro","email":"jose@email.com","senha":"1234","curso":"BCC","interesses":[],"amigos":[]}]}}

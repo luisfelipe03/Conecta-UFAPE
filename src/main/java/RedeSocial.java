@@ -5,19 +5,17 @@ public class RedeSocial {
     private Map<String, Usuario> usuarios;
 
     public RedeSocial() {
-        // Carregar dados do arquivo JSON ao iniciar a rede social
-        this.usuarios = Optional.ofNullable(PersistenciaJSON.carregarDados()).orElse(new HashMap<>());
+        this.usuarios = Optional.ofNullable(PersistenciaJSON.carregarDados())
+                .orElse(new HashMap<>());
     }
 
-    // Adicionar usuário
     public void adicionarUsuario(Usuario usuario) {
         if (!usuarios.containsKey(usuario.getEmail())) {
             usuarios.put(usuario.getEmail(), usuario);
-            salvarDados();  // Salvar ao adicionar usuário
+            salvarDados();
         }
     }
 
-    // Buscar usuário por email e senha
     public Usuario buscarUsuarioPorEmailESenha(String email, String senha) {
         Usuario usuario = usuarios.get(email);
         if (usuario != null && usuario.getSenha().equals(senha)) {
@@ -26,7 +24,6 @@ public class RedeSocial {
         return null;
     }
 
-    // Buscar usuário por nome
     public Usuario buscarUsuario(String nome) {
         for (Usuario usuario : usuarios.values()) {
             if (usuario.getNome().equalsIgnoreCase(nome)) {
@@ -36,7 +33,6 @@ public class RedeSocial {
         return null;
     }
 
-    // Recomendar amigos em comum
     public List<String> recomendarAmigosEmComum(Usuario usuario) {
         Set<Usuario> amigosDoUsuario = usuario.getAmigos();
         Map<String, Integer> contagemAmigosEmComum = new HashMap<>();
@@ -59,11 +55,6 @@ public class RedeSocial {
         return recomendacoes;
     }
 
-    public void adicionarInteresse(String interesse, Usuario usuario) {
-        usuario.getInteresses().add(interesse);
-    }
-
-    // Encontrar usuários por interesse
     public List<String> encontrarUsuariosComInteresses(String interesse) {
         List<String> usuariosComInteresse = new ArrayList<>();
         for (Usuario usuario : usuarios.values()) {
@@ -74,7 +65,6 @@ public class RedeSocial {
         return usuariosComInteresse;
     }
 
-    // Salvar os dados da rede social no arquivo JSON
     public void salvarDados() {
         PersistenciaJSON.salvarDados(usuarios);
     }

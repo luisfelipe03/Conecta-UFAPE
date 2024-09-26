@@ -7,11 +7,12 @@ public class Main {
     private static RedeSocial redeSocial = new RedeSocial();
     private static Usuario usuarioAtual = null;
 
+    private static Usuario u1 = new Usuario("José Belmiro", "jose@email.com", "1234", "BCC");
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         boolean rodando = true;
 
-        // Menu principal
         while (rodando) {
             if (usuarioAtual == null) {
                 System.out.println("Bem-vindo ao Conecta UFAPE!");
@@ -20,7 +21,7 @@ public class Main {
                 System.out.println("3. Sair");
 
                 int opcao = scanner.nextInt();
-                scanner.nextLine();  // Consumir a nova linha
+                scanner.nextLine();
 
                 switch (opcao) {
                     case 1 -> login(scanner);
@@ -29,9 +30,8 @@ public class Main {
                     default -> System.out.println("Opção inválida.");
                 }
             } else {
-                // Menu do usuário logado
                 System.out.println("\nBem-vindo, " + usuarioAtual.getNome());
-                System.out.println("1. Ver amigos");
+                System.out.println("1. Ver perfil");
                 System.out.println("2. Recomendações de amigos em comum");
                 System.out.println("3. Recomendações de amigos por interesse");
                 System.out.println("4. Buscar usuário por nome");
@@ -39,14 +39,14 @@ public class Main {
                 System.out.println("6. Logout");
 
                 int opcao = scanner.nextInt();
-                scanner.nextLine();  // Consumir a nova linha
+                scanner.nextLine();
 
                 switch (opcao) {
-                    case 1 -> verAmigos();
+                    case 1 -> verPerfil();
                     case 2 -> recomendacoesAmigosEmComum();
                     case 3 -> recomendacoesAmigosPorInteresse(scanner);
                     case 4 -> buscarUsuarioPorNome(scanner);
-                    case 5 -> adicionarInteresseAoPerfil(scanner); // Nova opção para adicionar interesse
+                    case 5 -> adicionarInteresseAoPerfil(scanner);
                     case 6 -> usuarioAtual = null;
                     default -> System.out.println("Opção inválida.");
                 }
@@ -56,7 +56,6 @@ public class Main {
         scanner.close();
     }
 
-    // Função para realizar login
     private static void login(Scanner scanner) {
         System.out.println("Digite seu email: ");
         String email = scanner.nextLine();
@@ -72,22 +71,28 @@ public class Main {
         }
     }
 
-    // Função para registrar um novo usuário
     private static void registrar(Scanner scanner) {
         System.out.println("Digite seu nome: ");
         String nome = scanner.nextLine();
+        System.out.println("Digite seu curso: ");
+        String curso = scanner.nextLine();
         System.out.println("Digite seu email: ");
         String email = scanner.nextLine();
         System.out.println("Digite sua senha: ");
         String senha = scanner.nextLine();
 
-        Usuario novoUsuario = new Usuario(nome, email, senha);
+        Usuario novoUsuario = new Usuario(nome, email, senha, curso);
         redeSocial.adicionarUsuario(novoUsuario);
         System.out.println("Usuário registrado com sucesso!");
     }
 
-    // Função para ver a lista de amigos
-    private static void verAmigos() {
+    private static void verPerfil() {
+        System.out.println("-=-=-=-=-= Conecta UFAPE =-=-=-=-=-=-");
+        System.out.println("Usuario: " + usuarioAtual.getNome());
+        System.out.println("Curso: " + usuarioAtual.getCurso());
+        System.out.println("Email: " + usuarioAtual.getEmail());
+        System.out.println("Interesses : " + usuarioAtual.getInteresses() + "\n");
+
         Set<Usuario> amigos = usuarioAtual.getAmigos();
         if (amigos.isEmpty()) {
             System.out.println("Você não tem amigos ainda.");
@@ -99,7 +104,6 @@ public class Main {
         }
     }
 
-    // Recomendações de amigos em comum
     private static void recomendacoesAmigosEmComum() {
         List<String> recomendacoes = redeSocial.recomendarAmigosEmComum(usuarioAtual);
         if (recomendacoes.isEmpty()) {
@@ -112,7 +116,6 @@ public class Main {
         }
     }
 
-    // Recomendações de amigos por interesse
     private static void recomendacoesAmigosPorInteresse(Scanner scanner) {
         System.out.println("Digite um interesse: ");
         String interesse = scanner.nextLine();
@@ -128,7 +131,6 @@ public class Main {
         }
     }
 
-    // Buscar usuário por nome
     private static void buscarUsuarioPorNome(Scanner scanner) {
         System.out.println("Digite o nome do usuário: ");
         String nome = scanner.nextLine();
@@ -141,7 +143,6 @@ public class Main {
         }
     }
 
-    // Nova função para adicionar interesse ao perfil do usuário
     private static void adicionarInteresseAoPerfil(Scanner scanner) {
         System.out.println("Digite o interesse que deseja adicionar ao seu perfil:");
         String interesse = scanner.nextLine();
@@ -149,7 +150,6 @@ public class Main {
         usuarioAtual.adicionarInteresse(interesse);
         System.out.println("Interesse adicionado com sucesso!");
 
-        // Persistir a alteração de interesse no JSON
         redeSocial.salvarDados();
     }
 }

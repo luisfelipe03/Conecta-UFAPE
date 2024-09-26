@@ -11,7 +11,6 @@ public class PersistenciaJSON {
     private static final String CAMINHO_JSON = "src/main/resources/data.json";
     private static ObjectMapper objectMapper = new ObjectMapper();
 
-    // Salvar dados no arquivo JSON
     public static void salvarDados(Map<String, Usuario> usuarios) {
         try {
             // Escreve os dados no arquivo JSON
@@ -22,12 +21,10 @@ public class PersistenciaJSON {
         }
     }
 
-    // Carregar dados do arquivo JSON
     public static Map<String, Usuario> carregarDados() {
         try {
             File arquivo = new File(CAMINHO_JSON);
 
-            // Verifica se o arquivo existe
             if (!arquivo.exists()) {
                 System.out.println("Arquivo data.json não encontrado, criando um novo.");
                 arquivo.createNewFile();
@@ -36,7 +33,6 @@ public class PersistenciaJSON {
                 return new HashMap<>();
             }
 
-            // Verifica se o arquivo está vazio
             if (arquivo.length() == 0) {
                 System.out.println("Arquivo data.json vazio, inicializando.");
                 return new HashMap<>();
