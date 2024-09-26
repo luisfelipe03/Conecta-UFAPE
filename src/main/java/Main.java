@@ -43,8 +43,7 @@ public class Main {
 
                 switch (opcao) {
                     case 1 -> verPerfil();
-                    case 2 -> recomendacoesAmigosEmComum();
-                    case 3 -> recomendacoesAmigosPorInteresse(scanner);
+                    case 2 -> recomendacoesAmigosEmComumEInteresse();
                     case 4 -> buscarUsuarioPorNome(scanner);
                     case 5 -> adicionarInteresseAoPerfil(scanner);
                     case 6 -> usuarioAtual = null;
@@ -104,32 +103,44 @@ public class Main {
         }
     }
 
-    private static void recomendacoesAmigosEmComum() {
-        List<String> recomendacoes = redeSocial.recomendarAmigosEmComum(usuarioAtual);
+    private static void recomendacoesAmigosEmComumEInteresse() {
+        List<Usuario> recomendacoes = redeSocial.recomendarAmigos(usuarioAtual);
         if (recomendacoes.isEmpty()) {
-            System.out.println("Nenhum amigo em comum encontrado.");
+            System.out.println("Nenhuma recomendação encontrada.");
         } else {
-            System.out.println("Recomendações de amigos em comum:");
-            for (String nome : recomendacoes) {
-                System.out.println("- " + nome);
+            System.out.println("Recomendações de amigos:");
+            for (Usuario amigo : recomendacoes) {
+                System.out.println("- " + amigo.getNome());
             }
         }
     }
 
-    private static void recomendacoesAmigosPorInteresse(Scanner scanner) {
-        System.out.println("Digite um interesse: ");
-        String interesse = scanner.nextLine();
-
-        List<String> recomendacoes = redeSocial.encontrarUsuariosComInteresses(interesse);
-        if (recomendacoes.isEmpty()) {
-            System.out.println("Nenhum usuário encontrado com esse interesse.");
-        } else {
-            System.out.println("Recomendações de amigos por interesse:");
-            for (String nome : recomendacoes) {
-                System.out.println("- " + nome);
-            }
-        }
-    }
+//    private static void recomendacoesAmigosEmComum() {
+//        List<String> recomendacoes = redeSocial.recomendarAmigosEmComum(usuarioAtual);
+//        if (recomendacoes.isEmpty()) {
+//            System.out.println("Nenhum amigo em comum encontrado.");
+//        } else {
+//            System.out.println("Recomendações de amigos em comum:");
+//            for (String nome : recomendacoes) {
+//                System.out.println("- " + nome);
+//            }
+//        }
+//    }
+//
+//    private static void recomendacoesAmigosPorInteresse(Scanner scanner) {
+//        System.out.println("Digite um interesse: ");
+//        String interesse = scanner.nextLine();
+//
+//        List<String> recomendacoes = redeSocial.encontrarUsuariosComInteresses(interesse);
+//        if (recomendacoes.isEmpty()) {
+//            System.out.println("Nenhum usuário encontrado com esse interesse.");
+//        } else {
+//            System.out.println("Recomendações de amigos por interesse:");
+//            for (String nome : recomendacoes) {
+//                System.out.println("- " + nome);
+//            }
+//        }
+//    }
 
     private static void buscarUsuarioPorNome(Scanner scanner) {
         System.out.println("Digite o nome do usuário: ");
