@@ -1,6 +1,4 @@
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class Usuario {
@@ -9,16 +7,23 @@ public class Usuario {
     private String senha;
     private String curso;
     private Set<String> interesses;
-    private Set<Usuario> amigos;
-    private List<Usuario> solicitacoesDeAmizade;
+    private Set<String> amigos; // Armazena e-mails dos amigos
+    private Set<String> solicitacoesDeAmizade; // Armazena e-mails de usuários que enviaram solicitações
+
+    public Usuario() {
+        this.interesses = new HashSet<>();
+        this.amigos = new HashSet<>();
+        this.solicitacoesDeAmizade = new HashSet<>();
+    }
 
     public Usuario(String nome, String email, String senha, String curso) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
+        this.curso = curso;
         this.interesses = new HashSet<>();
         this.amigos = new HashSet<>();
-        this.solicitacoesDeAmizade = new ArrayList<>();
+        this.solicitacoesDeAmizade = new HashSet<>();
     }
 
     public String getNome() {
@@ -45,8 +50,8 @@ public class Usuario {
         this.curso = curso;
     }
 
-    public Set<Usuario> getAmigos() {
-        return amigos;
+    public Set<String> getAmigos() {
+        return amigos; // Retorna e-mails dos amigos
     }
 
     public void adicionarInteresse(String interesse) {
@@ -57,21 +62,21 @@ public class Usuario {
         return interesses;
     }
 
-    public List<Usuario> getSolicitacoesAmizadePendentes() {
-        return solicitacoesDeAmizade;
+    public Set<String> getSolicitacoesAmizadePendentes() {
+        return solicitacoesDeAmizade; // Retorna e-mails de solicitações pendentes
     }
 
     public void adicionarSolicitacaoAmizade(Usuario usuario) {
-        this.solicitacoesDeAmizade.add(usuario);
+        this.solicitacoesDeAmizade.add(usuario.getEmail()); // Adiciona o e-mail do usuário que enviou a solicitação
     }
 
     public void removerSolicitacaoAmizade(Usuario usuario) {
-        this.solicitacoesDeAmizade.remove(usuario);
+        this.solicitacoesDeAmizade.remove(usuario.getEmail()); // Remove o e-mail da solicitação
     }
 
     public void aceitarSolicitacaoAmizade(Usuario usuario) {
-        this.amigos.add(usuario);
-        usuario.getAmigos().add(this);
-        this.solicitacoesDeAmizade.remove(usuario);
+        this.amigos.add(usuario.getEmail()); // Adiciona o e-mail do amigo
+        usuario.getAmigos().add(this.email);  // Adiciona o e-mail do usuário atual à lista do amigo
+        this.solicitacoesDeAmizade.remove(usuario.getEmail()); // Remove a solicitação pendente
     }
 }
