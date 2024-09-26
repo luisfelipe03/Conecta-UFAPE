@@ -13,7 +13,6 @@ public class PersistenciaJSON {
 
     public static void salvarDados(Map<String, Usuario> usuarios) {
         try {
-            // Escreve os dados no arquivo JSON
             objectMapper.writeValue(new File(CAMINHO_JSON), usuarios);
             System.out.println("Dados salvos com sucesso.");
         } catch (IOException e) {
@@ -28,7 +27,6 @@ public class PersistenciaJSON {
             if (!arquivo.exists()) {
                 System.out.println("Arquivo data.json não encontrado, criando um novo.");
                 arquivo.createNewFile();
-                // Inicializa o arquivo com um objeto vazio
                 salvarDados(new HashMap<>());
                 return new HashMap<>();
             }
@@ -38,7 +36,6 @@ public class PersistenciaJSON {
                 return new HashMap<>();
             }
 
-            // Ler o arquivo JSON e converter para um Map de usuários
             return objectMapper.readValue(arquivo, new TypeReference<Map<String, Usuario>>() {});
 
         } catch (IOException e) {
