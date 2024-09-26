@@ -14,7 +14,6 @@ public class PersistenciaJSON {
     public static void salvarDados(Map<String, Usuario> usuarios) {
         try {
             objectMapper.writeValue(new File(CAMINHO_JSON), usuarios);
-            System.out.println("Dados salvos com sucesso.");
         } catch (IOException e) {
             System.out.println("Erro ao salvar dados no JSON: " + e.getMessage());
         }

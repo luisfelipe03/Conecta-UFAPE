@@ -8,8 +8,6 @@ public class Main {
     private static final RedeSocial redeSocial = new RedeSocial();
     private static Usuario usuarioAtual = null;
 
-    private static final Usuario u1 = new Usuario("José Belmiro", "jose@email.com", "1234", "BCC");
-
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         boolean rodando = true;
@@ -144,13 +142,13 @@ public class Main {
         System.out.println("Usuário: " + usuarioAtual.getNome());
         System.out.println("Curso: " + usuarioAtual.getCurso());
         System.out.println("Email: " + usuarioAtual.getEmail());
-        System.out.println("Interesses: " + usuarioAtual.getInteresses() + "\n");
+        System.out.println("Interesses: " + usuarioAtual.getInteresses());
 
         Set<String> amigos = usuarioAtual.getAmigos(); // Obter a lista de amigos (agora apenas e-mails)
         if (amigos.isEmpty()) {
-            System.out.println("Você não tem amigos ainda.");
+            System.out.println("\nVocê não tem amigos ainda.");
         } else {
-            System.out.println("Seus amigos:");
+            System.out.println("\nSeus amigos:");
             for (String emailAmigo : amigos) {
                 Usuario amigo = redeSocial.buscarUsuarioPorEmail(emailAmigo); // Buscar o objeto Usuario pelo e-mail
                 if (amigo != null) {
@@ -164,11 +162,13 @@ public class Main {
     private static void recomendacoesAmigosEmComumEInteresse() {
         List<Usuario> recomendacoes = redeSocial.recomendarAmigos(usuarioAtual);
         if (recomendacoes.isEmpty()) {
-            System.out.println("Nenhuma recomendação encontrada.");
+            System.out.println("\nNenhuma recomendação encontrada.");
         } else {
-            System.out.println("Recomendações de amigos:");
+            System.out.println("\nRecomendações de amigos:");
             for (int i = 0; i < recomendacoes.size(); i++) {
-                System.out.println((i + 1) + ". " + recomendacoes.get(i).getNome());
+                System.out.println((i + 1) + ". " + recomendacoes.get(i).getNome()
+                        + " | Curso: " + recomendacoes.get(i).getCurso()
+                        + " | Interesses: " + recomendacoes.get(i).getInteresses());
             }
 
             System.out.println("Digite o número do usuário para enviar uma solicitação de amizade (ou '0' para cancelar):");
@@ -184,7 +184,7 @@ public class Main {
             if (numeroEscolhido > 0 && numeroEscolhido <= recomendacoes.size()) {
                 Usuario usuarioParaAdicionar = recomendacoes.get(numeroEscolhido - 1);
                 redeSocial.enviarSolicitacaoAmizade(usuarioAtual, usuarioParaAdicionar);
-                System.out.println("Solicitação de amizade enviada para " + usuarioParaAdicionar.getNome());
+                System.out.println("Solicitação de amizade enviada com Sucesso!");
             } else {
                 System.out.println("Número inválido.");
             }
