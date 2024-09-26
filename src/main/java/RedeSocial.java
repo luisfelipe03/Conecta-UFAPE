@@ -51,74 +51,75 @@ public class RedeSocial {
     public List<Usuario> recomendarAmigos(Usuario usuario) {
         Map<Usuario, Integer> pontuacoes = new HashMap<>();
         Set<Usuario> visitados = new HashSet<>();
-        Queue<Usuario> fila = new LinkedList<>();
 
-        // Adiciona o usuário atual à fila e ao conjunto de visitados
-        fila.add(usuario);
+        // Adiciona o próprio usuário ao conjunto de visitados para não recomendá-lo a si mesmo
         visitados.add(usuario);
 
-        // Nível de distância que estamos explorando
-        int nivelMaximo = 2; // por exemplo, amigos de amigos
-        int nivelAtual = 0;
+        // Verifica se o usuário tem amigos ou interesses
+        boolean temAmigos = !usuario.getAmigos().isEmpty();
+        boolean temInteresses = !usuario.getInteresses().isEmpty();
+        boolean temCurso = usuario.getCurso() != null && !usuario.getCurso().isEmpty();
 
-        while (!fila.isEmpty() && nivelAtual < nivelMaximo) {
-            int tamanhoFila = fila.size();
-
-            for (int i = 0; i < tamanhoFila; i++) {
-                Usuario usuarioAtual = fila.poll();
-
-                for (String emailAmigo : usuarioAtual.getAmigos()) {
-                    Usuario amigo = buscarUsuarioPorEmail(emailAmigo);
-
-                    if (amigo != null && !visitados.contains(amigo) && !amigo.equals(usuario)) {
-                        // Adiciona amigo ao conjunto de visitados e à fila
-                        visitados.add(amigo);
-                        fila.add(amigo);
-
-                        // Inicializa pontuação se o amigo ainda não estiver no mapa
-                        pontuacoes.putIfAbsent(amigo, 0);
-
-                        // Aumenta a pontuação com base nos interesses
-                        Set<String> interessesEmComum = new HashSet<>(usuario.getInteresses());
-                        interessesEmComum.retainAll(amigo.getInteresses());
-                        if (!interessesEmComum.isEmpty()) {
-                            pontuacoes.put(amigo, pontuacoes.get(amigo) + 1); // Peso 1 para interesses em comum
-                        }
-
-                        // Aumenta a pontuação com base nos cursos
-                        if (usuario.getCurso().equalsIgnoreCase(amigo.getCurso())) {
-                            pontuacoes.put(amigo, pontuacoes.get(amigo) + 1); // Peso 1 se os cursos forem os mesmos
-                        }
-                    }
-                }
-            }
-            nivelAtual++;
+        // Se o usuário não tem amigos, interesses ou curso, não recomendamos ninguém
+        if (!temAmigos && !temInteresses && !temCurso) {
+            return new ArrayList<>(); // Retorna lista vazia
         }
 
-        // Ordena os possíveis amigos com base na pontuação
+        // Percorre todos os usuários na rede social para encontrar possíveis recomendações
+        for (Usuario possivelAmigo : usuarios.values()) {
+            // Verifica se o possível amigo já foi visitado ou é o próprio usuário
+            if (!visitados.contains(possivelAmigo) && !usuario.getAmigos().contains(possivelAmigo.getEmail())) {
+                int pontuacao = 0;
+
+                // Aumenta a pontuação com base em amigos em comum
+                Set<String> amigosEmComum = new HashSet<>(usuario.getAmigos());
+                amigosEmComum.retainAll(possivelAmigo.getAmigos());
+                if (!amigosEmComum.isEmpty()) {
+                    pontuacao += 1; // Peso 1 para amigos em comum
+                }
+
+                // Aumenta a pontuação com base nos interesses em comum
+                Set<String> interessesEmComum = new HashSet<>(usuario.getInteresses());
+                interessesEmComum.retainAll(possivelAmigo.getInteresses());
+                if (!interessesEmComum.isEmpty()) {
+                    pontuacao += 2; // Peso 2 para interesses em comum
+                }
+
+                // Aumenta a pontuação com base no curso em comum
+                if (usuario.getCurso().equalsIgnoreCase(possivelAmigo.getCurso())) {
+                    pontuacao += 3; // Peso 3 se os cursos forem os mesmos
+                }
+
+                // Adiciona o possível amigo à lista de recomendados se tiver alguma pontuação
+                if (pontuacao > 0) {
+                    pontuacoes.put(possivelAmigo, pontuacao);
+                }
+
+                // Marca o usuário como visitado
+                visitados.add(possivelAmigo);
+            }
+        }
+
+        // Ordena os possíveis amigos com base na pontuação (prioridade: curso > interesses > amigos em comum)
         List<Usuario> recomendacoes = new ArrayList<>(pontuacoes.keySet());
         recomendacoes.sort((u1, u2) -> pontuacoes.get(u2).compareTo(pontuacoes.get(u1))); // Ordena do maior para o menor
 
         return recomendacoes;
     }
 
-
     public void enviarSolicitacaoAmizade(Usuario remetente, Usuario destinatario) {
         destinatario.adicionarSolicitacaoAmizade(remetente);
         salvarDados();
-        System.out.println(remetente.getNome() + " enviou uma solicitação de amizade para " + destinatario.getNome());
     }
 
     public void aceitarSolicitacaoAmizade(Usuario usuarioAtual, Usuario solicitante) {
         usuarioAtual.aceitarSolicitacaoAmizade(solicitante);
         salvarDados();
-        System.out.println("Você agora é amigo de " + solicitante.getNome());
     }
 
     public void recusarSolicitacaoAmizade(Usuario usuarioAtual, Usuario solicitante) {
         usuarioAtual.removerSolicitacaoAmizade(solicitante);
         salvarDados();
-        System.out.println("Pedido de amizade de " + solicitante.getNome() + " recusado!");
     }
 
     public void salvarDados() {
