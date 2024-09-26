@@ -86,11 +86,9 @@ public class Main {
                 char resposta = scanner.next().charAt(0);
 
                 if (resposta == 'a' || resposta == 'A') {
-                    // Aceitar a solicitação de amizade
                     redeSocial.aceitarSolicitacaoAmizade(usuarioAtual, solicitante);
                     System.out.println("Você agora é amigo de " + solicitante.getNome());
                 } else if (resposta == 'r' || resposta == 'R') {
-                    // Recusar a solicitação de amizade
                     redeSocial.recusarSolicitacaoAmizade(usuarioAtual, solicitante);
                     System.out.println("Solicitação de amizade de " + solicitante.getNome() + " foi recusada.");
                 } else {
@@ -103,9 +101,6 @@ public class Main {
             System.out.println("Opção inválida. Tente novamente.");
         }
     }
-
-
-
 
     private static void login(Scanner scanner) {
         System.out.println("Digite seu email: ");
